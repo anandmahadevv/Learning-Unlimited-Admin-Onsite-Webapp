@@ -563,3 +563,35 @@ async function seedSampleData() {
         if (btn) btn.disabled = false;
     }
 }
+
+/**
+ * 9. Create new event
+ */
+async function createNewEvent() {
+    const name = prompt("Enter a name for the new event (e.g. Splash 2027):");
+    if (!name) return;
+    
+    if (!confirm(`Warning: This will PERMANENTLY DELETE all current classes and data for ${name}. Continue?`)) return;
+    
+    showToast('Wiping data and creating new event...', 'success');
+    
+    try {
+        const response = await fetch('/onsite/api/create-event/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ event_name: name })
+        });
+        const data = await response.json();
+        
+        if (response.ok) {
+            showToast(data.message, 'success');
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+        } else {
+            showToast(data.error || 'Failed to create event.', 'danger');
+        }
+    } catch (e) {
+        showToast('Network error.', 'danger');
+    }
+}

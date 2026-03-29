@@ -80,13 +80,18 @@
             </div>
         </div>
 
-        <!-- CARD 4 - Data Management -->
         <div class="card p-4 border-danger-subtle bg-light">
             <h5 class="fw-bold text-danger mb-3">Data Management</h5>
             <p class="text-muted small mb-4">Reset the database and populate it with 10 realistic classes and hundreds of sample students for demonstration purposes.</p>
-            <button class="btn btn-outline-danger w-100 py-2 fw-bold" id="seedDataBtn" onclick="if(confirm('This will DELETE all current classes and students. Proceed?')) seedSampleData()">
-                <i class="bi bi-database-fill-gear me-2"></i>Seed Sample Data
-            </button>
+            
+            <div class="d-flex flex-column gap-2">
+                <button class="btn btn-outline-danger w-100 py-2 fw-bold" id="seedDataBtn" onclick="if(confirm('This will DELETE all current classes and students. Proceed?')) seedSampleData()">
+                    <i class="bi bi-database-fill-gear me-2"></i>Seed Sample Data
+                </button>
+                <button class="btn btn-navy w-100 py-2 fw-bold" onclick="createNewEvent()" style="background: var(--navy); color: white; border: none;">
+                    <i class="bi bi-calendar-plus me-2"></i>Start New Fresh Event
+                </button>
+            </div>
         </div>
     </div>
 </div>

@@ -15,4 +15,5 @@ urlpatterns = [
     path('api/classes/<int:class_id>/update-cap/', views.api_update_cap, name='api_update_cap'),
     path('api/settings/', views.api_settings, name='api_settings'),
     path('api/seed-data/', views.api_seed_data, name='api_seed_data'),
+    path('api/create-event/', views.api_create_event, name='api_create_event'),
 ]

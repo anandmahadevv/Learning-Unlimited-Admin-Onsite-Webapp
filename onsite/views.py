@@ -211,3 +211,22 @@ def api_seed_data(request):
 
         return JsonResponse({"message": f"Successfully seeded {len(classes_data)} classes"})
     return JsonResponse({"error": "POST method required"}, status=400)
+
+@csrf_exempt
+def api_create_event(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        new_event_name = data.get("event_name", "New ESP Event")
+        
+        # Clear existing data
+        ESP_Class.objects.all().delete()
+        Enrollment.objects.all().delete()
+        
+        # Update settings
+        settings, created = OnsiteSettings.objects.get_or_create(id=1)
+        settings.event_name = new_event_name
+        settings.global_registration_open = True
+        settings.save()
+        
+        return JsonResponse({"message": f"Successfully created new event: {new_event_name}"})
+    return JsonResponse({"error": "POST method required"}, status=400)
