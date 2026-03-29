@@ -5,7 +5,7 @@
  */
 async function fetchClasses() {
     try {
-        const response = await fetch('/onsite/api/classes/');
+        const response = await fetch('/api/classes/');
         const data = await response.json();
         
         updateSummaryStats(data);
@@ -146,7 +146,7 @@ async function toggleRegistration(classId, button) {
     spinner.classList.remove('d-none');
     
     try {
-        const response = await fetch(`/onsite/api/classes/${classId}/toggle-registration/`, {
+        const response = await fetch(`/api/classes/${classId}/toggle-registration/`, {
             method: 'POST'
         });
         const data = await response.json();
@@ -171,7 +171,7 @@ async function toggleRegistration(classId, button) {
  */
 async function toggleTeacherCheckin(classId, isDetailPage = false) {
     try {
-        const response = await fetch(`/onsite/api/classes/${classId}/toggle-teacher-checkin/`, {
+        const response = await fetch(`/api/classes/${classId}/toggle-teacher-checkin/`, {
             method: 'POST'
         });
         const data = await response.json();
@@ -297,7 +297,7 @@ function loadingSkeletons() {
 
 async function fetchClassDetail(id) {
     try {
-        const response = await fetch(`/onsite/api/classes/${id}/`);
+        const response = await fetch(`/api/classes/${id}/`);
         const data = await response.json();
         
         renderStudents(data.students);
@@ -371,7 +371,7 @@ function renderStudents(students) {
 
 async function toggleStudentCheckin(id) {
     try {
-        const response = await fetch(`/onsite/api/students/${id}/toggle-checkin/`, {
+        const response = await fetch(`/api/students/${id}/toggle-checkin/`, {
             method: 'POST'
         });
         if (response.ok) {
@@ -387,7 +387,7 @@ async function toggleStudentCheckin(id) {
 
 async function updateOverenrollmentCap(id, val) {
     try {
-        const response = await fetch(`/onsite/api/classes/${id}/update-cap/`, {
+        const response = await fetch(`/api/classes/${id}/update-cap/`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ overenrollment_cap: parseInt(val) })
@@ -405,7 +405,7 @@ async function updateOverenrollmentCap(id, val) {
 
 async function fetchSettings() {
     try {
-        const response = await fetch('/onsite/api/settings/');
+        const response = await fetch('/api/settings/');
         const data = await response.json();
         
         const toggle = document.getElementById('globalRegToggle');
@@ -449,7 +449,7 @@ function updateGlobalUI(isOpen) {
 async function applyGlobalSettings() {
     try {
         const isOpen = document.getElementById('globalRegToggle').checked;
-        const response = await fetch('/onsite/api/settings/', {
+        const response = await fetch('/api/settings/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ global_registration_open: isOpen })
@@ -473,7 +473,7 @@ async function saveDefaultCap() {
         const cap = document.getElementById('defaultOverenrollment').value;
         const updateAll = document.getElementById('applyToAllCheck').checked;
         
-        const response = await fetch('/onsite/api/settings/', {
+        const response = await fetch('/api/settings/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ default_overenrollment_cap: parseInt(cap) })
@@ -488,7 +488,7 @@ async function saveDefaultCap() {
 
 async function fetchClassesSummary() {
     try {
-        const response = await fetch('/onsite/api/classes/');
+        const response = await fetch('/api/classes/');
         const classes = await response.json();
         updateSummaryStats(classes);
     } catch (e) {
@@ -543,7 +543,7 @@ async function seedSampleData() {
     showToast('Resetting and seeding data...', 'success');
     
     try {
-        const response = await fetch('/onsite/api/seed-data/', {
+        const response = await fetch('/api/seed-data/', {
             method: 'POST'
         });
         const data = await response.json();
@@ -576,7 +576,7 @@ async function createNewEvent() {
     showToast('Wiping data and creating new event...', 'success');
     
     try {
-        const response = await fetch('/onsite/api/create-event/', {
+        const response = await fetch('/api/create-event/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ event_name: name })
