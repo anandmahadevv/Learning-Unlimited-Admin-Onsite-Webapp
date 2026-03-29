@@ -1,0 +1,176 @@
+{% extends 'onsite/base.html' %}
+
+{% block title %}{{ obj.name }}{% endblock %}
+
+{% block content %}
+<div class="mb-4 d-flex align-items-center">
+    <a href="{% url 'dashboard' %}" class="btn btn-link text-navy text-decoration-none fw-bold p-0">
+        <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+    </a>
+</div>
+
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-2">
+    <h1 class="h3 mb-0 text-navy fw-bold" id="className">{{ obj.name }}</h1>
+    <div id="statusBadgeContainer">
+        <span class="badge" id="classStatusBadge">OPEN</span>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- LEFT COLUMN - Class Info -->
+    <div class="col-12 col-lg-4">
+        <div class="card p-4 h-100">
+            <h5 class="fw-bold text-navy mb-4">Class Overview</h5>
+            
+            <div class="mb-5 text-center">
+                <div class="d-flex align-items-center justify-content-center mb-2">
+                    <i class="bi bi-person-circle fs-3 text-blue me-3"></i>
+                    <div class="text-start">
+                        <small class="text-muted d-block uppercase fw-bold" style="font-size: 0.65rem;">TEACHER</small>
+                        <span class="fw-bold" id="teacherName">{{ obj.teacher_name }}</span>
+                    </div>
+                </div>
+                <button class="btn btn-sm w-100 border mt-2 teacher-checkin-btn" id="teacherCheckinBtn">
+                    <span id="teacherStatusText">Teacher: Not Checked In ✗</span>
+                </button>
+            </div>
+
+            <div class="row g-4 mb-5">
+                <div class="col-6">
+                    <small class="text-muted d-block uppercase fw-bold" style="font-size: 0.65rem;">ROOM</small>
+                    <span class="fw-bold" id="roomNumber">{{ obj.room }}</span>
+                </div>
+                <div class="col-6">
+                    <small class="text-muted d-block uppercase fw-bold" style="font-size: 0.65rem;">TIME</small>
+                    <span class="fw-bold" id="timeSlot">{{ obj.start_time }} - {{ obj.end_time }}</span>
+                </div>
+                <div class="col-6">
+                    <small class="text-muted d-block uppercase fw-bold" style="font-size: 0.65rem;">CATEGORY</small>
+                    <span class="fw-bold" id="categoryName">{{ obj.category }}</span>
+                </div>
+                <div class="col-6">
+                    <small class="text-muted d-block uppercase fw-bold" style="font-size: 0.65rem;">CAPACITY</small>
+                    <span class="fw-bold" id="capacity">{{ obj.capacity }}</span>
+                </div>
+            </div>
+
+            <div class="mb-5">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <small class="text-muted uppercase fw-bold" style="font-size: 0.65rem;">OVERENROLLMENT CAP</small>
+                    <div class="input-group input-group-sm" style="width: 120px;">
+                        <input type="number" id="overenrollmentInput" class="form-control" value="{{ obj.overenrollment_cap }}">
+                        <button class="btn btn-navy btn-sm" id="saveCapBtn" style="background: var(--navy); color: white;">Save</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <div class="d-flex justify-content-between mb-1">
+                    <small class="fw-bold">Enrollment: <span id="enrollmentRatio">0/0</span></small>
+                    <small class="fw-bold" id="enrollmentPercent">0%</small>
+                </div>
+                <div class="progress" style="height: 12px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" id="enrollmentProgressBar" role="progressbar"></div>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <div class="d-flex justify-content-between mb-1">
+                    <small class="fw-bold">Check-ins: <span id="checkinRatio">0/0</span></small>
+                    <small class="fw-bold" id="checkinPercent">0%</small>
+                </div>
+                <div class="progress" style="height: 12px;">
+                    <div class="progress-bar" id="checkinProgressBar" role="progressbar" style="background-color: var(--blue);"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT COLUMN - Student List -->
+    <div class="col-12 col-lg-8">
+        <div class="card h-100 overflow-hidden">
+            <div class="card-header bg-white p-4 border-bottom-0 pb-0">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                    <h5 class="fw-bold text-navy mb-0">Enrolled Students (<span id="studentCount">0</span>)</h5>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-outline-success fw-bold" onclick="checkInAll()">Check In All</button>
+                        <button class="btn btn-sm btn-outline-navy fw-bold" style="border-color: var(--navy); color: var(--navy);" onclick="exportCSV()">Export CSV</button>
+                    </div>
+                </div>
+                <div class="input-group mt-4">
+                    <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                    <input type="text" id="studentSearch" class="form-control border-start-0" placeholder="Filter students by name..." onkeyup="filterStudents()">
+                </div>
+            </div>
+            
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0" id="studentTable">
+                        <thead class="bg-light text-muted uppercase small fw-bold">
+                            <tr>
+                                <th class="px-4 py-3">Name</th>
+                                <th class="py-3">Grade</th>
+                                <th class="py-3">Status</th>
+                                <th class="pe-4 py-3 text-end">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentListBody">
+                            <!-- Rows injected here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="noStudents" class="text-center py-5 d-none">
+                    <p class="text-muted">No students found.</p>
+                </div>
+            </div>
+
+            <div class="card-footer bg-light p-4 border-top-0">
+                <div class="d-flex justify-content-between align-items-center text-muted">
+                    <span id="footerCheckinSummary">0 of 0 students checked in</span>
+                    <div class="progress flex-grow-1 mx-4" style="height: 6px; max-width: 200px;">
+                        <div class="progress-bar" id="footerCheckinProgressBar" role="progressbar" style="background-color: var(--blue);"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/onsite/js/onsite.js"></script>
+<script>
+    const classId = {{ obj.id }};
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchClassDetail(classId);
+        
+        document.getElementById('saveCapBtn').addEventListener('click', () => {
+            const newCap = document.getElementById('overenrollmentInput').value;
+            updateOverenrollmentCap(classId, newCap);
+        });
+
+        document.getElementById('teacherCheckinBtn').addEventListener('click', () => {
+            toggleTeacherCheckin(classId, true); // true for detail page context
+        });
+    });
+
+    function filterStudents() {
+        const query = document.getElementById('studentSearch').value.toLowerCase();
+        const rows = document.querySelectorAll('#studentListBody tr');
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+            const name = row.querySelector('.student-name').textContent.toLowerCase();
+            if (name.includes(query)) {
+                row.classList.remove('d-none');
+                visibleCount++;
+            } else {
+                row.classList.add('d-none');
+            }
+        });
+
+        document.getElementById('noStudents').classList.toggle('d-none', visibleCount > 0);
+    }
+</script>
+{% endblock %}
