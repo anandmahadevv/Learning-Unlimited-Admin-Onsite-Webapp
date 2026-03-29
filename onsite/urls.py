@@ -14,4 +14,5 @@ urlpatterns = [
     path('api/students/<int:enrollment_id>/toggle-checkin/', views.api_toggle_student_checkin, name='api_toggle_student_checkin'),
     path('api/classes/<int:class_id>/update-cap/', views.api_update_cap, name='api_update_cap'),
     path('api/settings/', views.api_settings, name='api_settings'),
+    path('api/seed-data/', views.api_seed_data, name='api_seed_data'),
 ]

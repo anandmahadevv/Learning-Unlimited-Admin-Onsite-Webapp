@@ -58,7 +58,7 @@
         </div>
 
         <!-- CARD 3 - Event Info -->
-        <div class="card p-4">
+        <div class="card p-4 mb-4">
             <h5 class="fw-bold text-navy mb-4">Event Info</h5>
             <div class="row g-4 text-center">
                 <div class="col-6 col-md-3">
@@ -78,6 +78,15 @@
                     <span class="fw-bold" id="totalEnrolledDisplay">0</span>
                 </div>
             </div>
+        </div>
+
+        <!-- CARD 4 - Data Management -->
+        <div class="card p-4 border-danger-subtle bg-light">
+            <h5 class="fw-bold text-danger mb-3">Data Management</h5>
+            <p class="text-muted small mb-4">Reset the database and populate it with 10 realistic classes and hundreds of sample students for demonstration purposes.</p>
+            <button class="btn btn-outline-danger w-100 py-2 fw-bold" id="seedDataBtn" onclick="if(confirm('This will DELETE all current classes and students. Proceed?')) seedSampleData()">
+                <i class="bi bi-database-fill-gear me-2"></i>Seed Sample Data
+            </button>
         </div>
     </div>
 </div>

@@ -532,3 +532,34 @@ function exportCSV() {
     document.body.removeChild(a);
     showToast('Exporting CSV...', 'success');
 }
+
+/**
+ * 8. Seed sample data
+ */
+async function seedSampleData() {
+    const btn = document.getElementById('seedDataBtn');
+    if (btn) btn.disabled = true;
+    
+    showToast('Resetting and seeding data...', 'success');
+    
+    try {
+        const response = await fetch('/onsite/api/seed-data/', {
+            method: 'POST'
+        });
+        const data = await response.json();
+        
+        if (response.ok) {
+            showToast(data.message, 'success');
+            // Refresh counts
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+        } else {
+            showToast(data.error || 'Failed to seed data.', 'danger');
+        }
+    } catch (e) {
+        showToast('Network error.', 'danger');
+    } finally {
+        if (btn) btn.disabled = false;
+    }
+}
