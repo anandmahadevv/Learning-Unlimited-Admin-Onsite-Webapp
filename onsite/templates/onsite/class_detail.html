@@ -139,38 +139,6 @@
 
 {% block extra_js %}
 <script src="/static/onsite/js/onsite.js"></script>
-<script>
-    const classId = {{ obj.id }};
-    
-    document.addEventListener('DOMContentLoaded', () => {
-        fetchClassDetail(classId);
-        
-        document.getElementById('saveCapBtn').addEventListener('click', () => {
-            const newCap = document.getElementById('overenrollmentInput').value;
-            updateOverenrollmentCap(classId, newCap);
-        });
-
-        document.getElementById('teacherCheckinBtn').addEventListener('click', () => {
-            toggleTeacherCheckin(classId, true); // true for detail page context
-        });
-    });
-
-    function filterStudents() {
-        const query = document.getElementById('studentSearch').value.toLowerCase();
-        const rows = document.querySelectorAll('#studentListBody tr');
-        let visibleCount = 0;
-
-        rows.forEach(row => {
-            const name = row.querySelector('.student-name').textContent.toLowerCase();
-            if (name.includes(query)) {
-                row.classList.remove('d-none');
-                visibleCount++;
-            } else {
-                row.classList.add('d-none');
-            }
-        });
-
-        document.getElementById('noStudents').classList.toggle('d-none', visibleCount > 0);
-    }
-</script>
+{% block extra_js %}
+<script src="/static/onsite/js/onsite.js"></script>
 {% endblock %}

@@ -169,45 +169,6 @@
     </div>
 </template>
 
-<style>
-    .class-card {
-        border-radius: 12px;
-        border: 1px solid #edf2f7;
-        overflow: hidden;
-    }
-    
-    .status-badge {
-        font-size: 0.7rem;
-        padding: 0.4em 0.8em;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-
-    .badge-open { background-color: var(--success); }
-    .badge-filling { background-color: var(--warning); color: black; }
-    .badge-full { background-color: var(--danger); }
-    .badge-closed { background-color: #6c757d; }
-
-    .btn-outline-navy:hover {
-        background-color: var(--navy);
-        color: white !important;
-    }
-</style>
-{% endblock %}
-
 {% block extra_js %}
 <script src="/static/onsite/js/onsite.js"></script>
-<script>
-    // Initialize Dashboard
-    document.addEventListener('DOMContentLoaded', () => {
-        updateClock();
-        setInterval(updateClock, 1000);
-        
-        loadingSkeletons();
-        fetchClasses();
-        
-        // Auto-refresh every 15 seconds
-        setInterval(fetchClasses, 15000);
-    });
-</script>
 {% endblock %}

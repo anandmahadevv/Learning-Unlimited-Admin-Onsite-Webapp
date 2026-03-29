@@ -595,3 +595,79 @@ async function createNewEvent() {
         showToast('Network error.', 'danger');
     }
 }
+
+/**
+ * 10. Global Initialization
+ */
+document.addEventListener('DOMContentLoaded', () => {
+    // Shared - Clock
+    const liveClock = document.getElementById('liveClock');
+    if (liveClock) {
+        updateClock();
+        setInterval(updateClock, 1000);
+    }
+
+    // Dashboard Page
+    const dashboardGrid = document.getElementById('classCardsGrid');
+    if (dashboardGrid) {
+        loadingSkeletons();
+        fetchClasses();
+        // Auto-refresh every 30 seconds
+        setInterval(fetchClasses, 30000);
+    }
+
+    // Class Detail Page
+    const studentList = document.getElementById('studentListBody');
+    if (studentList) {
+        // Extract classId from URL path (e.g., /classes/123/)
+        const pathParts = window.location.pathname.split('/');
+        // Find the index of 'classes' and get the next part
+        const classIdx = pathParts.indexOf('classes');
+        if (classIdx !== -1 && pathParts[classIdx + 1]) {
+            const classId = pathParts[classIdx + 1];
+            fetchClassDetail(classId);
+
+            // Set up listeners
+            const saveBtn = document.getElementById('saveCapBtn');
+            if (saveBtn) {
+                saveBtn.onclick = () => {
+                    const newCap = document.getElementById('overenrollmentInput').value;
+                    updateOverenrollmentCap(classId, newCap);
+                };
+            }
+
+            const teacherBtn = document.getElementById('teacherCheckinBtn');
+            if (teacherBtn) {
+                teacherBtn.onclick = () => toggleTeacherCheckin(classId, true);
+            }
+        }
+    }
+
+    // Settings Page
+    const globalRegToggle = document.getElementById('globalRegToggle');
+    if (globalRegToggle) {
+        fetchSettings();
+        fetchClassesSummary();
+    }
+});
+
+function filterStudents() {
+    const query = document.getElementById('studentSearch').value.toLowerCase();
+    const rows = document.querySelectorAll('#studentListBody tr');
+    let visibleCount = 0;
+
+    rows.forEach(row => {
+        const name = row.querySelector('.student-name').textContent.toLowerCase();
+        if (name.includes(query)) {
+            row.classList.remove('d-none');
+            visibleCount++;
+        } else {
+            row.classList.add('d-none');
+        }
+    });
+
+    const noStudents = document.getElementById('noStudents');
+    if (noStudents) {
+        noStudents.classList.toggle('d-none', visibleCount > 0);
+    }
+}
