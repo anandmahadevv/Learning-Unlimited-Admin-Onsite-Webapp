@@ -27,6 +27,8 @@ To see the full capabilities of the dashboard:
 - **Real-time Dashboard**: Monitor class enrollment ratios, teacher status, and student check-ins at a glance.
 - **Micro-interactions**: Seamlessly toggle registration status or teacher check-ins without page reloads.
 - **Capacity Management**: Adjust overenrollment caps on-the-fly for individual classes or globally.
+- **Global Announcements**: Broadcast important alerts to all onsite staff via a persistent banner.
+- **Data Export**: One-click "Export to CSV" for all enrollment data, enabling offline tracking.
 - **Smart Filtering**: Filter by category (Computer Science, Science, Humanities, etc.), registration status, or time slot.
 - **Data Persistence**: Admin controls to seed demo data or wipe the system for a fresh event start.
 - **Mobile Responsive**: Designed using a "Mobile First" approach for onsite portability.
