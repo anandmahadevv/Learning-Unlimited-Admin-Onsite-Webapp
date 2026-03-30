@@ -1,4 +1,5 @@
 {% extends 'onsite/base.html' %}
+{% load static %}
 
 {% block title %}{{ obj.name }}{% endblock %}
 
@@ -138,5 +139,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="/static/onsite/js/onsite.js"></script>
+<script src="{% static 'onsite/js/onsite.js' %}"></script>
 {% endblock %}
