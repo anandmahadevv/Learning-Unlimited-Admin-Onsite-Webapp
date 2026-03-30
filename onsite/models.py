@@ -32,3 +32,11 @@ class OnsiteSettings(models.Model):
     default_overenrollment_cap = models.IntegerField(default=5)
     event_name = models.CharField(max_length=100, 
                                   default="Splash 2026")
+
+class Announcement(models.Model):
+    message = models.CharField(max_length=500)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.message[:50]

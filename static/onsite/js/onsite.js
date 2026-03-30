@@ -597,7 +597,88 @@ async function createNewEvent() {
 }
 
 /**
- * 10. Global Initialization
+ * 11. Announcements Logic
+ */
+async function fetchAnnouncements() {
+    try {
+        const response = await fetch('/api/announcements/');
+        const data = await response.json();
+        
+        // Update top banner
+        const container = document.getElementById('announcementContainer');
+        if (container) {
+            container.innerHTML = '';
+            data.forEach(a => {
+                const alert = document.createElement('div');
+                alert.className = 'alert alert-info alert-dismissible fade show border-0 shadow-sm';
+                alert.style.backgroundColor = 'var(--blue-light)';
+                alert.style.color = 'var(--navy)';
+                alert.role = 'alert';
+                alert.innerHTML = `
+                    <i class="bi bi-megaphone-fill me-2"></i>
+                    <strong>Announcement:</strong> ${a.message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                `;
+                container.appendChild(alert);
+            });
+        }
+        
+        // Update settings list if exists
+        const list = document.getElementById('activeAnnouncementsList');
+        if (list) {
+            list.innerHTML = data.length > 0 ? '<h6 class="fw-bold mb-3 small uppercase text-muted">Active Announcements</h6>' : '';
+            data.forEach(a => {
+                const item = document.createElement('div');
+                item.className = 'd-flex justify-content-between align-items-center p-2 border rounded mb-2 bg-light';
+                item.innerHTML = `
+                    <span class="small">${a.message}</span>
+                    <button class="btn btn-sm text-danger" onclick="deleteAnnouncement(${a.id})"><i class="bi bi-trash"></i></button>
+                `;
+                list.appendChild(item);
+            });
+        }
+    } catch (e) {
+        console.error("Error fetching announcements:", e);
+    }
+}
+
+async function postAnnouncement() {
+    const msgInput = document.getElementById('announcementMsg');
+    const msg = msgInput.value.trim();
+    if (!msg) return;
+    
+    try {
+        const response = await fetch('/api/announcements/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: msg })
+        });
+        if (response.ok) {
+            showToast('Announcement posted!', 'success');
+            msgInput.value = '';
+            fetchAnnouncements();
+        }
+    } catch (e) {
+         showToast('Error posting announcement.', 'danger');
+    }
+}
+
+async function deleteAnnouncement(id) {
+    try {
+        const response = await fetch(`/api/announcements/${id}/delete/`, {
+            method: 'POST'
+        });
+        if (response.ok) {
+            showToast('Announcement deleted!', 'success');
+            fetchAnnouncements();
+        }
+    } catch (e) {
+         showToast('Error deleting announcement.', 'danger');
+    }
+}
+
+/**
+ * 12. Global Initialization
  */
 document.addEventListener('DOMContentLoaded', () => {
     // Shared - Clock
@@ -606,6 +687,11 @@ document.addEventListener('DOMContentLoaded', () => {
         updateClock();
         setInterval(updateClock, 1000);
     }
+    
+    // Shared - Announcements
+    fetchAnnouncements();
+    // Auto-refresh every 60 seconds
+    setInterval(fetchAnnouncements, 60000);
 
     // Dashboard Page
     const dashboardGrid = document.getElementById('classCardsGrid');
