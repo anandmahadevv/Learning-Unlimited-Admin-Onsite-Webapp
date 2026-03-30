@@ -16,4 +16,7 @@ urlpatterns = [
     path('api/settings/', views.api_settings, name='api_settings'),
     path('api/seed-data/', views.api_seed_data, name='api_seed_data'),
     path('api/create-event/', views.api_create_event, name='api_create_event'),
+    path('api/export-enrollments/', views.export_enrollments_csv, name='export_enrollments_csv'),
+    path('api/announcements/', views.api_announcements, name='api_announcements'),
+    path('api/announcements/<int:a_id>/delete/', views.api_delete_announcement, name='api_delete_announcement'),
 ]

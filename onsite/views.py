@@ -1,9 +1,10 @@
 import json
 import random
+import csv
 from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models import ESP_Class, Enrollment, OnsiteSettings
+from .models import ESP_Class, Enrollment, OnsiteSettings, Announcement
 
 def dashboard(request):
     return render(request, 'onsite/dashboard.html')
@@ -230,3 +231,40 @@ def api_create_event(request):
         
         return JsonResponse({"message": f"Successfully created new event: {new_event_name}"})
     return JsonResponse({"error": "POST method required"}, status=400)
+
+def export_enrollments_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="esp_enrollments.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Class Name', 'Student Name', 'Grade', 'Checked In'])
+
+    enrollments = Enrollment.objects.all().select_related('esp_class')
+    for e in enrollments:
+        writer.writerow([e.esp_class.name, e.student_name, e.student_grade, "Yes" if e.checked_in else "No"])
+
+    return response
+
+@csrf_exempt
+def api_announcements(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        msg = data.get("message")
+        if msg:
+            Announcement.objects.create(message=msg)
+            return JsonResponse({"message": "Announcement created"})
+        return JsonResponse({"error": "Message required"}, status=400)
+    
+    # GET: fetch all active announcements
+    announcements = Announcement.objects.filter(is_active=True).order_by('-created_at')
+    data = [{"id": a.id, "message": a.message, "created_at": a.created_at.isoformat()} for a in announcements]
+    return JsonResponse(data, safe=False)
+
+@csrf_exempt
+def api_delete_announcement(request, a_id):
+    if request.method == "POST":
+        a = get_object_or_404(Announcement, id=a_id)
+        a.is_active = False
+        a.save()
+        return JsonResponse({"message": "Announcement deleted"})
+    return JsonResponse({"error": "POST required"}, status=400)
