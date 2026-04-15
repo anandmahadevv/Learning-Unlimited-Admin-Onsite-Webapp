@@ -10,3 +10,6 @@
 ## Update (2026-04-29T09:47:52)
 - refactor: optimize data processing pipeline
 
+## Update (2026-04-15T09:47:53)
+- fix: handle null pointer exception in service layer
+
