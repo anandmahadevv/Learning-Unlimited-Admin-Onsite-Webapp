@@ -1,4 +1,4 @@
-# Learning Unlimited: ESP Onsite Admin Webapp — GSoC 2026 Prototype
+# Learning Unlimited: ESP Onsite Admin Webapp — GSoC  Prototype
 
 [![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen)](https://learning-unlimited-admin-onsite-web.vercel.app/)
 [![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-blue)](https://github.com/anandmahadev/Learning-Unlimited-Admin-Onsite-Webapp)
@@ -74,8 +74,8 @@ Visit `http://localhost:8000` to view the app.
 
 ---
 
-## 🏛 Project Context (GSoC 2026)
-This prototype serves as a technical proof-of-concept for a GSoC 2026 proposal. It addresses specific onsite needs discussed in the Learning Unlimited community.
+## 🏛 Project Context 
+This prototype serves as a technical proof-of-concept for a GSoC  proposal. It addresses specific onsite needs discussed in the Learning Unlimited community.
 
 - **Reference Issue**: [ESP-Website/issues/2672](https://github.com/learning-unlimited/ESP-Website/issues/2672)
 - **Proposed By**: Anand Mahadev
